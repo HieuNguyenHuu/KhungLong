@@ -98,6 +98,8 @@ proj.ios_mac/*.xcodeproj/xcuserdata/
 *.suo
 .vs/
 .vscode/
+cocos2d/
+build/
 cocos2d/cocos/2d/Debug.*/
 cocos2d/cocos/editor-support/spine/proj.win32/Debug.*/
 cocos2d/external/Box2D/proj.win32/Debug.*/
