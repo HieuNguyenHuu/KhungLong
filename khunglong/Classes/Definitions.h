@@ -6,3 +6,4 @@
 
 #define SPLASH_LOGO "logo.png"
 
+#define SCROLLING_BACKGROUND_SPEED 0.005

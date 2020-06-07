@@ -24,7 +24,8 @@ bool GameScene::init()
     {
         return false;
     }
-
+LayerColor *bgColor = LayerColor::create(Color4B(168, 218, 217, 179));
+    this->addChild(bgColor, -10);
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
@@ -79,6 +80,57 @@ Animate* animate = Animate::create(animation);
 
 khunglong->runAction(RepeatForever::create(animate));
 
+background1 = Sprite::create("road_1.png");
+background1->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+background1->setScale(3);
+background1->setPosition(Vec2(origin.x, origin.y + 300));
+background2 = Sprite::create("road_2.png");
+background2->setAnchorPoint(Vec2::ANCHOR_MIDDLE_LEFT);
+background2->setScale(3);
+background2->setPosition(Vec2(origin.x + background2->getContentSize().width + background1->getContentSize().width, origin.y + 300));
+this->addChild(background1, -1);
+this->addChild(background2, -1);
+
+_backgroundElements = InfiniteParallaxNode::create();
+
+	// 
+	unsigned int rocksQuantity = 5;
+	for (unsigned int i = 0; i < rocksQuantity; i++)
+	{
+		auto rock = Sprite::create("cactus_1.png");
+		rock->setAnchorPoint(Point::ZERO);
+		rock->setScale(randomValueBetween(2, 3));
+		_backgroundElements->addChild(rock,
+			randomValueBetween(-10, -6),
+			Point(0.95, 1.0),
+			Point(
+			(visibleSize.height / 5) * (i + 1) + randomValueBetween(0, 100),
+			background1->getContentSize().height - 5+ 300));
+	}
+    addChild(_backgroundElements, -1);
+    this->scheduleUpdate();
     
     return true;
+}
+void GameScene::update(float delta)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    background1->setPositionX(background1->getPositionX() - (SCROLLING_BACKGROUND_SPEED*visibleSize.width));
+	background2->setPositionX(background2->getPositionX() - (SCROLLING_BACKGROUND_SPEED*visibleSize.width));
+
+	if (background1->getPositionX() <= -background1->getContentSize().width)
+	{
+		background1->setPositionX(background2->getPositionX() + background2->getContentSize().width );
+	}
+	if (background2->getPositionX() <= -background2->getContentSize().width)
+	{
+		background2->setPositionX(background1->getPositionX() + background1->getContentSize().width);
+	}
+    Point scrollDecrement = Point(5, 0); 
+	_backgroundElements->setPosition(_backgroundElements->getPosition() - scrollDecrement);
+	_backgroundElements->updatePosition();
+}
+float GameScene::randomValueBetween(float low, float high)
+{
+	return (((float)rand() / RAND_MAX) * (high - low)) + low;
 }
